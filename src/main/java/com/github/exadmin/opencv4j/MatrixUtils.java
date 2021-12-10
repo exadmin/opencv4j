@@ -97,4 +97,31 @@ public class MatrixUtils {
 
         return contourPoints;
     }
+
+    /**
+     * Resized source image and created new resized one.
+     * Note! Method is not implemented fully.
+     * @param sourceImage
+     * @param prefWidth
+     * @param prefHeight
+     * @param keepAspectRatio
+     * @return
+     */
+    public static Mat resizeImage(Mat sourceImage, int prefWidth, int prefHeight, boolean keepAspectRatio) {
+        int srcWidth  = sourceImage.width();
+        int srcHeight = sourceImage.height();
+
+        if (keepAspectRatio) {
+            double ratio = (double) srcWidth / (double) prefWidth;
+            double newHeight = srcHeight / ratio;
+
+            Mat resizedImage = new Mat();
+            Size newSize = new Size(prefWidth, newHeight);
+            Imgproc.resize(sourceImage, resizedImage, newSize);
+
+            return resizedImage;
+        }
+
+        throw new IllegalStateException("Method is not implemented for this set of parameters");
+    }
 }
