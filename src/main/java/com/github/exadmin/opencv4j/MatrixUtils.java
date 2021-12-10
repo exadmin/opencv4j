@@ -8,7 +8,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageUtils {
+public class MatrixUtils {
 
     /**
      * Resizes image and returns new one
