@@ -8,7 +8,9 @@ public class ColorUtils {
     private static final Random rng = new Random(12345);
 
     public static Scalar getColor(double red, double green, double blue) {
-        return new Scalar(red, green, blue);
+        // Original 3 channel color has BGR order
+        // (c) https://stackoverflow.com/questions/29301903/how-to-specify-a-color-using-scalar-class
+        return new Scalar(blue, green, red);
     }
 
     public static Scalar getRandomColor() {

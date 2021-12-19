@@ -124,4 +124,10 @@ public class MatrixUtils {
 
         throw new IllegalStateException("Method is not implemented for this set of parameters");
     }
+
+    public static Mat getCopy(Mat sourceMatrix) {
+        Mat copy= new Mat();
+        sourceMatrix.copyTo(copy);
+        return copy;
+    }
 }
