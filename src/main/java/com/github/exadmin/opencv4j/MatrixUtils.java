@@ -1,8 +1,9 @@
 package com.github.exadmin.opencv4j;
 
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Size;
+import com.github.exadmin.opencv4j.enums.ContourApproximationMethod;
+import com.github.exadmin.opencv4j.enums.CvType4j;
+import com.github.exadmin.opencv4j.enums.RetrievalMode;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
@@ -132,5 +133,46 @@ public class MatrixUtils {
         Mat copy= new Mat();
         sourceMatrix.copyTo(copy);
         return copy;
+    }
+
+    /**
+     * Approximates a curve or a polygon with another curve/polygon with less vertices so that the distance between them
+     * is less or equal to the specified precision.
+     * It uses the Douglas-Peucker algorithm <http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm>
+     * @param curve input vector of 2D points
+     * @param approximationPrecision Parameter specifying the approximation accuracy.
+     *                               This is the maximum distance between the original curve and its approximation.
+     * @param isClosedPolygon If true, the approximated curve is closed (its first and last vertices are connected).
+     *                        Otherwise, it is not closed.
+     * @return vector of 2D floating points as result of approximation.
+     */
+    public static MatOfPoint2f approximatePolygon(MatOfPoint curve, double approximationPrecision, boolean isClosedPolygon) {
+        MatOfPoint2f curve2f = new MatOfPoint2f();
+        curve.convertTo(curve2f, CvType.CV_32FC2);
+        return approximatePolygon(curve2f, approximationPrecision, isClosedPolygon);
+    }
+
+    public static MatOfPoint2f approximatePolygon(MatOfPoint2f curve, double approximationPrecision, boolean isClosedPolygon) {
+        MatOfPoint2f resultCurve2f = new MatOfPoint2f();
+        Imgproc.approxPolyDP(curve, resultCurve2f, approximationPrecision, isClosedPolygon);
+
+        return resultCurve2f;
+    }
+
+    public static MatOfPoint2f approximatePolygon(MatOfPoint curve, int approxPerimeterMaxLengthInPercentage, boolean isClosedPolygon) {
+        MatOfPoint2f curve2f = new MatOfPoint2f();
+        curve.convertTo(curve2f, CvType.CV_32FC2);
+
+        double perimeterLength = Imgproc.arcLength(curve2f, isClosedPolygon);
+        double approxPerimeterLength = perimeterLength * approxPerimeterMaxLengthInPercentage / 100.0;
+
+        return approximatePolygon(curve2f, approxPerimeterLength, isClosedPolygon);
+    }
+
+    public static MatOfPoint convert(MatOfPoint2f curve2f, CvType4j cvType) {
+        MatOfPoint curve = new MatOfPoint();
+        curve2f.convertTo(curve, cvType.getValue());
+
+        return curve;
     }
 }

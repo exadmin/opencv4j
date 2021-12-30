@@ -1,4 +1,4 @@
-package com.github.exadmin.opencv4j;
+package com.github.exadmin.opencv4j.enums;
 
 import org.opencv.imgproc.Imgproc;
 
