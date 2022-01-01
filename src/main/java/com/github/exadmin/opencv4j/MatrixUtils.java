@@ -169,10 +169,10 @@ public class MatrixUtils {
         return approximatePolygon(curve2f, approxPerimeterLength, isClosedPolygon);
     }
 
-    public static MatOfPoint convert(MatOfPoint2f curve2f, CvType4j cvType) {
-        MatOfPoint curve = new MatOfPoint();
-        curve2f.convertTo(curve, cvType.getValue());
+    public static <M extends Mat> M convert(Mat sourceMat, CvType4j<M> cvType) {
+        M resultMat = cvType.getReturnInstance();
+        sourceMat.convertTo(resultMat, cvType.getValue());
 
-        return curve;
+        return resultMat;
     }
 }
