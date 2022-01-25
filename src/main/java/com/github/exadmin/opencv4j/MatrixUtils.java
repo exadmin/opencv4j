@@ -111,13 +111,13 @@ public class MatrixUtils {
      * @param keepAspectRatio
      * @return
      */
-    public static Mat resizeImage(Mat sourceImage, int prefWidth, int prefHeight, boolean keepAspectRatio) {
-        int srcWidth  = sourceImage.width();
-        int srcHeight = sourceImage.height();
+    public static Mat resizeImage(Mat sourceImage, double prefWidth, double prefHeight, boolean keepAspectRatio) {
+        double srcWidth  = sourceImage.width();
+        double srcHeight = sourceImage.height();
 
         if (keepAspectRatio) {
-            double ratio = (double) srcWidth / (double) prefWidth;
-            double newHeight = srcHeight / ratio;
+            double ratio = prefHeight / srcWidth;
+            double newHeight = srcHeight * ratio;
 
             Mat resizedImage = new Mat();
             Size newSize = new Size(prefWidth, newHeight);
