@@ -177,20 +177,32 @@ public class MatrixUtils {
     }
 
     public static Mat getPerspectiveBy4Points(Mat sourceMat, int newWidth, int newHeight, Point ... point) {
-        if (point == null || point.length != 4)
-            throw new IllegalArgumentException("Four 2D-points must be provided to specify image coordinates to get");
-
-        // calculate geometry center of points
-        double centerX = (point[0].x + point[1].x + point[2].x + point[3].x) / 4;
-        double centerY = (point[0].y + point[1].y + point[2].y + point[3].y) / 4;
-
-        // define top-left, top-right, bottom-right and bottom-left points
         List<Point> points = new ArrayList<>(4);
         points.add(point[0]);
         points.add(point[1]);
         points.add(point[2]);
         points.add(point[3]);
 
+        return getPerspectiveBy4Points(sourceMat, newWidth, newHeight, points);
+    }
+
+    public static Mat getPerspectiveBy4Points(Mat sourceMat, int newWidth, int newHeight, List<Point> points) {
+        if (points == null || points.size() != 4)
+            throw new IllegalArgumentException("Four 2D-points must be provided to specify image coordinates to get");
+
+        // calculate geometry center of points
+        double centerX = 0;
+        double centerY = 0;
+
+        for (Point point : points) {
+            centerX = centerX + point.x;
+            centerY = centerY + point.y;
+        }
+
+        centerX = centerX / 4;
+        centerY = centerY / 4;
+
+        // define top-left, top-right, bottom-right and bottom-left points
         Point[] sortedPoints = new Point[4];
 
         boolean tl = false;
