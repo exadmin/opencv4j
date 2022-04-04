@@ -175,4 +175,73 @@ public class MatrixUtils {
 
         return resultMat;
     }
+
+    public static Mat getPerspectiveBy4Points(Mat sourceMat, int newWidth, int newHeight, Point ... point) {
+        if (point == null || point.length != 4)
+            throw new IllegalArgumentException("Four 2D-points must be provided to specify image coordinates to get");
+
+        // calculate geometry center of points
+        double centerX = (point[0].x + point[1].x + point[2].x + point[3].x) / 4;
+        double centerY = (point[0].y + point[1].y + point[2].y + point[3].y) / 4;
+
+        // define top-left, top-right, bottom-right and bottom-left points
+        List<Point> points = new ArrayList<>(4);
+        points.add(point[0]);
+        points.add(point[1]);
+        points.add(point[2]);
+        points.add(point[3]);
+
+        Point[] sortedPoints = new Point[4];
+
+        boolean tl = false;
+        boolean tr = false;
+        boolean bl = false;
+        boolean br = false;
+
+        for (Point nextPoint : points) {
+            double datax = nextPoint.x;
+            double datay = nextPoint.y;
+
+            if (datax < centerX && datay < centerY) {
+                sortedPoints[0] = new Point(datax, datay);
+                tl = true;
+            } else if (datax > centerX && datay < centerY) {
+                sortedPoints[1] = new Point(datax, datay);
+                tr = true;
+            } else if (datax < centerX && datay > centerY) {
+                sortedPoints[2] = new Point(datax, datay);
+                bl = true;
+            } else if (datax > centerX && datay > centerY) {
+                sortedPoints[3] = new Point(datax, datay);
+                br = true;
+            }
+        }
+
+
+        if (tl & tr & bl & br) {
+            // continue if we have good figure
+            MatOfPoint2f src = new MatOfPoint2f(
+                    sortedPoints[0],
+                    sortedPoints[1],
+                    sortedPoints[2],
+                    sortedPoints[3]);
+
+            MatOfPoint2f dst = new MatOfPoint2f(
+                    new Point(0, 0),
+                    new Point(newWidth - 1, 0),
+                    new Point(0, newHeight - 1),
+                    new Point(newWidth - 1, newHeight - 1)
+            );
+
+            Mat warpMat = Imgproc.getPerspectiveTransform(src, dst);
+
+            Mat resultMat = new Mat();
+            Imgproc.warpPerspective(sourceMat, resultMat, warpMat, sourceMat.size());
+
+            return resultMat;
+        } else {
+            // otherwise return null
+            return null;
+        }
+    }
 }
