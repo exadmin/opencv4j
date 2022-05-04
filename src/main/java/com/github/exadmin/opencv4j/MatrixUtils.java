@@ -107,26 +107,19 @@ public class MatrixUtils {
      * Note! Method is not implemented fully.
      * @param sourceImage
      * @param prefWidth
-     * @param prefHeight
-     * @param keepAspectRatio
      * @return
      */
-    public static Mat resizeImage(Mat sourceImage, double prefWidth, double prefHeight, boolean keepAspectRatio) {
+    public static Mat resizeImage(Mat sourceImage, double prefWidth) {
         double srcWidth  = sourceImage.width();
         double srcHeight = sourceImage.height();
 
-        if (keepAspectRatio) {
-            double ratio = prefHeight / srcWidth;
-            double newHeight = srcHeight * ratio;
+        double prefHeight = prefWidth * srcHeight / srcWidth;
 
-            Mat resizedImage = new Mat();
-            Size newSize = new Size(prefWidth, newHeight);
-            Imgproc.resize(sourceImage, resizedImage, newSize);
+        Mat resizedImage = new Mat();
+        Size newSize = new Size(prefWidth, prefHeight);
+        Imgproc.resize(sourceImage, resizedImage, newSize);
 
-            return resizedImage;
-        }
-
-        throw new IllegalStateException("Method is not implemented for this set of parameters");
+        return resizedImage;
     }
 
     public static Mat getCopy(Mat sourceMatrix) {
