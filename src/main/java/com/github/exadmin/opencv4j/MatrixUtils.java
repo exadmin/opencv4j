@@ -78,7 +78,7 @@ public class MatrixUtils {
      */
     public static Mat getEdgesUsingCanny(Mat sourceImage, double threshold1, double threshold2, int apertureSize) {
         if (apertureSize != 3 && apertureSize != 5 && apertureSize != 7) {
-            throw new IllegalArgumentException("apertureSize must have 3, 5 or 7 int value");
+            throw new IllegalArgumentException("apertureSize must have 3, 5 or 7 int value. Provided value was = " + apertureSize);
         }
         Mat newImage = new Mat();
         Imgproc.Canny(sourceImage, newImage, threshold1, threshold2, apertureSize);
